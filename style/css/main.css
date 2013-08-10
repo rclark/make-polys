@@ -1,0 +1,25 @@
+* {
+    padding: 0px;
+    margin:0px;
+}
+
+html, body, #map {
+    height: 100%;
+    width: 100%;
+}
+
+.build-polys-button {
+    height: 16px;
+    width: 16px;
+    background-image: url("../img/make-em.png");
+}
+
+.start-tutorial {
+    height: 16px;
+    width: 16px;
+    background-image: url("../img/help.png");
+}
+
+.popover-content .btn-group {
+    margin: 10px 0px;
+}
