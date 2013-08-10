@@ -1,8 +1,10 @@
 // Make a map
+var mapboxAttr = "Basemap design © <a href='http://mapbox.com/about/maps'>MapBox</a> — Basemap data © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap contributors</a>"
+
 var map = new L.Map("map", {
     center: new L.LatLng(32.149, -110.439),
     zoom: 12,
-    layers: [ L.tileLayer("http://{s}.tiles.mapbox.com/v3/rclark.map-lgs3w52k/{z}/{x}/{y}.png") ]
+    layers: [ L.tileLayer("http://{s}.tiles.mapbox.com/v3/rclark.map-lgs3w52k/{z}/{x}/{y}.png", { attribution: mapboxAttr }) ],    
 });
 
 // Override default Leaflet.draw tooltips
