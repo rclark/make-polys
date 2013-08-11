@@ -34,16 +34,32 @@ var topology = {
         onAdd: function (map) {
             var container = L.DomUtil.create("div", "build-polys leaflet-bar"),
                 buildThem = L.DomUtil.create("a", "build-polys-button", container),
+                sampleLines = L.DomUtil.create("a", "sample-lines", container),
                 helpMe = L.DomUtil.create("a", "start-tutorial", container);
             buildThem.href = "#";
             helpMe.href = "#";
             
+            _buildPolys = function (e) {
+                topology.buildPolygons();
+                this.addLayer(topology.polygons);
+                topology.selectedFeatures.clearLayers();
+                tutorial.cancel();
+            };
+            
+            _addSampleData = function (e) {
+                window.gotData = function (data) {
+                    youDrewThese.addData(data);        
+                };
+                
+                $("body").append("<script src='js/sample-lines.js'></script>");
+            };
+                
             L.DomEvent
                 .on(buildThem, 'click', L.DomEvent.stopPropagation)
                 .on(buildThem, 'mousedown', L.DomEvent.stopPropagation)
                 .on(buildThem, 'dblclick', L.DomEvent.stopPropagation)
                 .on(buildThem, 'click', L.DomEvent.preventDefault)
-                .on(buildThem, 'click', this._buildPolys, map);
+                .on(buildThem, 'click', _buildPolys, map);
             
             L.DomEvent
                 .on(helpMe, 'click', L.DomEvent.stopPropagation)
@@ -52,15 +68,15 @@ var topology = {
                 .on(helpMe, 'click', L.DomEvent.preventDefault)
                 .on(helpMe, 'click', tutorial.restart, tutorial);
             
+            L.DomEvent
+                .on(sampleLines, 'click', L.DomEvent.stopPropagation)
+                .on(sampleLines, 'mousedown', L.DomEvent.stopPropagation)
+                .on(sampleLines, 'dblclick', L.DomEvent.stopPropagation)
+                .on(sampleLines, 'click', L.DomEvent.preventDefault)
+                .on(sampleLines, 'click', _addSampleData, {});
+            
             return container;
-        },
-        
-        _buildPolys: function (e) {
-            topology.buildPolygons();
-            this.addLayer(topology.polygons);
-            topology.selectedFeatures.clearLayers();
-            tutorial.cancel();
-        }
+        },        
     }),
     
     buildPolygons: function () {

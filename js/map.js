@@ -2,7 +2,7 @@
 var mapboxAttr = "Basemap design © <a href='http://mapbox.com/about/maps'>MapBox</a> — Basemap data © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap contributors</a>"
 
 var map = new L.Map("map", {
-    center: new L.LatLng(32.149, -110.439),
+    center: new L.LatLng(32.185, -110.432),
     zoom: 12,
     layers: [ L.tileLayer("http://{s}.tiles.mapbox.com/v3/rclark.map-lgs3w52k/{z}/{x}/{y}.png", { attribution: mapboxAttr }) ],    
 });
@@ -12,7 +12,15 @@ L.drawLocal.draw.simpleshape.tooltip.end = "Release to select some lines";
 L.drawLocal.draw.toolbar.polyline = "First step...";
 
 // Add drawing controls
-var youDrewThese = new L.FeatureGroup(),
+var lineOptions = {
+    color: "#221BE0",
+    weight: 2,
+    opacity: 1
+};
+
+var youDrewThese = new L.GeoJSON(null, {
+        style: lineOptions
+    }),
     drawTool = new L.Control.Draw({
         edit: {
             featureGroup: youDrewThese
@@ -23,11 +31,7 @@ var youDrewThese = new L.FeatureGroup(),
             marker: false,
             polyline: {
                 title: "Draw some lines",
-                shapeOptions: {
-                    color: "#221BE0",
-                    weight: 2,
-                    opacity: 1
-                }
+                shapeOptions: lineOptions
             },
             rectangle: {
                 title: "Select some lines",
@@ -55,7 +59,7 @@ tutorial.next();
 // Wire up the reaction to newly created features
 map.on("draw:created", function (e) {
     if (e.layerType === "polyline") {
-        youDrewThese.addLayer(e.layer);
+        youDrewThese.addData(e.layer.toGeoJSON());
         tutorial.toStep(2);
     } else if (e.layerType === "rectangle") {
         topology.highlightIntersecting(e.layer, youDrewThese);

@@ -20,6 +20,12 @@ html, body, #map {
     background-image: url("../img/help.png");
 }
 
+.sample-lines {
+    height: 16px;
+    width: 16px;
+    background-image: url("../img/add-lines.png");
+}
+
 .popover-content .btn-group {
     margin: 10px 0px;
 }
