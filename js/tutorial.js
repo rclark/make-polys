@@ -1,7 +1,7 @@
 var Tutorial = function () {
     return {
         initialize: function () {
-                this.steps = [
+            this.steps = [
                 {
                     ele: $(".leaflet-draw-draw-polyline"),
                     content: "First, draw a set of lines that will define the boundaries of some polygons."
@@ -19,7 +19,7 @@ var Tutorial = function () {
             this.step = 0;
                 
             this.steps.forEach(function (step, index) {
-                var content = "<p>" + step.content + "</p>";
+                var content = "<p>" + step.content + "</p>",
                     cancelText = index !== 2 ? "Cancel Tutorial" : "Finish Tutorial";
                 content += "<div class='btn-group pull-right'>";
                 content += "<button class='btn tutorial-cancel' href='#'>" + cancelText + "</button>";

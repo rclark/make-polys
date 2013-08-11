@@ -17,6 +17,8 @@ var topology = {
         var reader = new jsts.io.GeoJSONReader(),
             jstsArea = reader.read(rectangle.toGeoJSON());
         
+        this.selectedFeatures.clearLayers();
+        
         lines.toGeoJSON().features.forEach(function (feature) {
             var jstsLine = reader.read(feature);
             if (jstsArea.geometry.intersects(jstsLine.geometry)) {
@@ -48,7 +50,7 @@ var topology = {
             
             _addSampleData = function (e) {
                 window.gotData = function (data) {
-                    youDrewThese.addData(data);        
+                    youDrewThese.addData(data);
                 };
                 
                 $("body").append("<script src='js/sample-lines.js'></script>");
@@ -76,7 +78,7 @@ var topology = {
                 .on(sampleLines, 'click', _addSampleData, {});
             
             return container;
-        },        
+        }
     }),
     
     buildPolygons: function () {
@@ -91,7 +93,15 @@ var topology = {
         
         // Convert the GeoJSON Lines into jsts NodedSegmentStrings
         reader.read(lines).features.forEach(function (jstsFeature) {
-            segments.add(new jsts.noding.NodedSegmentString(jstsFeature.geometry.points));
+            if (jstsFeature.geometry.geometries) {
+                // The case of MultiLineStrings
+                jstsFeature.geometry.geometries.forEach(function (line) {
+                    segments.add(new jsts.noding.NodedSegmentString(line.points));
+                });
+            } else {
+                // The case of LineStrings
+                segments.add(new jsts.noding.NodedSegmentString(jstsFeature.geometry.points));
+            }
         });
         
         // "Clean", "Planarize" or "Node" the network of lines (whatever you call it)
@@ -99,14 +109,19 @@ var topology = {
         noder.computeNodes(segments);
         var cleanedSegments = noder.getNodedSubstrings();
         
+        //var segmentLayer = L.geoJson(null, { style: { color: "red" } });
+        
         // Extract jsts LineStrings from the cleaned segments, add them to the polygonizer
         var i = cleanedSegments.iterator();
         while (i.hasNext()) {
             var segment = i.next(),
                 coords = segment.getCoordinates(),
                 line = factory.createLineString(coords);
+            //segmentLayer.addData(writer.write(line));
             polygonizer.add(line);
         }
+        
+        //console.log(JSON.stringify(segmentLayer.toGeoJSON()));
         
         // Generate polygons, add them to the GeoJSON layer
         topology.polygons.clearLayers();

@@ -1,10 +1,10 @@
 // Make a map
-var mapboxAttr = "Basemap design © <a href='http://mapbox.com/about/maps'>MapBox</a> — Basemap data © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap contributors</a>"
+var mapboxAttr = "Basemap design © <a href='http://mapbox.com/about/maps'>MapBox</a> — Basemap data © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap contributors</a>";
 
 var map = new L.Map("map", {
     center: new L.LatLng(32.185, -110.432),
     zoom: 12,
-    layers: [ L.tileLayer("http://{s}.tiles.mapbox.com/v3/rclark.map-lgs3w52k/{z}/{x}/{y}.png", { attribution: mapboxAttr }) ],    
+    layers: [ L.tileLayer("http://{s}.tiles.mapbox.com/v3/rclark.map-lgs3w52k/{z}/{x}/{y}.png", { attribution: mapboxAttr }) ]
 });
 
 // Override default Leaflet.draw tooltips
@@ -31,7 +31,14 @@ var youDrewThese = new L.GeoJSON(null, {
             marker: false,
             polyline: {
                 title: "Draw some lines",
-                shapeOptions: lineOptions
+                shapeOptions: _.extend({
+                    snapping: {
+                        enabled: true,
+                        layers: [youDrewThese],
+                        sensitivity: 20,
+                        vertexonly: false
+                    }
+                }, lineOptions)
             },
             rectangle: {
                 title: "Select some lines",
